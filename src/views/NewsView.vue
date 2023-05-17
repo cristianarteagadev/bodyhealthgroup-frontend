@@ -37,7 +37,7 @@
 
               <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 <li v-for="links in post.links" :key="links.id">
-                  <a class="dropdown-item" :href="links.url">{{
+                  <a class="dropdown-item" :href="links.url" target="_blank">{{
                     links.name
                   }}</a>
                 </li>
