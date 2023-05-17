@@ -7,7 +7,7 @@
         <label class="form-label"
           >Categoría: <small class="text-danger">(* requerido)</small></label
         >
-        <select class="form-select" id="category_id">
+        <select class="form-select" id="category_id" v-model="category_id">
           <option selected>Seleccionar</option>
           <option
             v-for="category in categories"
@@ -23,7 +23,7 @@
       </div>
       <div class="mb-3">
         <label class="form-label">Región:</label>
-        <select class="form-select" id="region_id">
+        <select class="form-select" id="region_id" v-model="region_id">
           <option selected>Seleccionar</option>
           <option v-for="region in regions" :key="region.id" :value="region.id">
             {{ region.name }}
@@ -57,19 +57,27 @@
             [+] Agregar Referencia
           </button>
         </h5>
-        
-        <div v-for="(reference, index) in references" :key="index" class="btn-group mb-3">
+
+        <div
+          v-for="(reference, index) in references"
+          :key="index"
+          class="btn-group mb-3"
+        >
           <input
             v-model="reference.name"
             type="text"
-            placeholder="Nombre Sitio Web" class="form-control"
+            placeholder="Nombre Sitio Web"
+            class="form-control"
           />
           <input
             v-model="reference.url"
             type="text"
-            placeholder="Dirección de Enlace" class="form-control"
+            placeholder="Dirección de Enlace"
+            class="form-control"
           />
-          <button @click="removeReference(index)" class="btn btn-danger"> Eliminar</button>
+          <button @click="removeReference(index)" class="btn btn-danger">
+            Eliminar
+          </button>
         </div>
       </div>
       <hr />
@@ -92,7 +100,6 @@ export default {
       message: "", //textarea
       //validar formulario
       category_id: "",
-      content: "",
       errors: {},
       //Referencias
       references: [],
@@ -142,20 +149,37 @@ export default {
     submitForm(e) {
       e.preventDefault();
       this.errors = {};
-
-      if (!this.category_id) {
+      
+      if (this.category_id === '') {
         this.errors.category_id = "Error: Categoría es obligatoria.";
       }
 
-      if (!this.content) {
+      if (this.message === '') {
         this.errors.content = "Error: Contenido de la Noticia es obligatoria.";
       }
 
       if (Object.keys(this.errors).length === 0) {
-        // acciones posteriores del formulario
-        console.log("Formulario enviado");
+        // Preparando el request payload
+        alert("payload");
+        const payload = {
+          category_id: this.category_id,
+          region_id: this.region_id,
+          content: this.message,
+          links: this.references,
+        };
+
+        // Enviar POST request a la API
+        this.axios
+          .post("http://127.0.0.1:8000/api/posts", payload)
+          .then((response) => {
+            console.log("Noticia Guardada:", response);
+          })
+          .catch((error) => {
+            console.error("Error creando la Noticia:", error);
+          });
       }
     },
+
     //Referencias de Links Externos
     addReference(e) {
       e.preventDefault();
