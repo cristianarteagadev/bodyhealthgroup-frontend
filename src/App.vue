@@ -1,7 +1,8 @@
 <template>
   <nav>
-    <router-link to="/">Ver Noticias</router-link> |
-    <router-link to="/crear-noticia">Crear Noticia</router-link>
+    <router-link :to="{name: 'newsView'}">Ver Noticias</router-link> |
+    <router-link :to="{name: 'createPost'}">Crear Noticia</router-link> |
+    <router-link :to="{name: 'modifyPost'}">Modificar Noticias</router-link>
   </nav>
   <router-view/>
 </template>

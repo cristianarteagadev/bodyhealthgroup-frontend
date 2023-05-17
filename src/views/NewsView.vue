@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div>
     <h1>Listado de Noticias</h1>
   </div>
 </template>
