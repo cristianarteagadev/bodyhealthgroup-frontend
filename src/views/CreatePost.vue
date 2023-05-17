@@ -9,6 +9,7 @@
           <option selected>Seleccionar</option>
           <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
         </select>
+        <div v-if="errors.category_id" class="text-danger"><small>{{ errors.category_id }}</small></div>
       </div>
       <div class="mb-3">
         <label class="form-label">Región:</label>
@@ -21,10 +22,11 @@
           <label class="form-label">Contenido de la Noticia: <small class="text-danger">(* requerido)</small> </label>
           <textarea class="form-control" v-model="message" v-on:input="check" id="content"></textarea>
           <input class="input" type="hidden" v-model="limit" v-on:input="check">
-          <small :class="{help: true, 'is-danger': remaining==0}">{{instruction}}</small>  
+          <small :class="{help: true, 'is-danger': remaining==0}">{{instruction}}</small>
+          <div v-if="errors.content" class="text-danger"><small>{{ errors.content }}</small></div>  
       </div>
 
-      <button type="submit" class="btn btn-primary">Guardar Noticia</button>
+      <button @click="submitForm" class="btn btn-primary">Guardar Noticia</button>
     </form>
   </div>
 </template>
@@ -36,8 +38,13 @@ export default {
     return {
       categories: [],
       regions: [],
+      //limitar caracteres
       limit: 255,//textarea
       message: "",//textarea
+      //validar formulario
+      category_id: '',
+      content: '',
+      errors: {}
     };
   },
   created() {
@@ -80,6 +87,24 @@ export default {
     check: function () {
       this.message = this.message.substr(0, this.limit);
     },
+    //validar formulario
+    submitForm(e) {
+      e.preventDefault();
+      this.errors = {};
+
+      if (!this.category_id) {
+        this.errors.category_id = 'Error: Categoría es obligatoria.';
+      }
+
+      if (!this.content) {
+        this.errors.content = 'Error: Contenido de la Noticia es obligatoria.';
+      }
+
+      if (Object.keys(this.errors).length === 0) {
+        // acciones posteriores del formulario
+        console.log('Formulario enviado');
+      }
+    }
   },
   computed: {
     instruction: function () {
