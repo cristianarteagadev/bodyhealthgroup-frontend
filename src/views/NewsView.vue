@@ -20,7 +20,7 @@
       <div class="card-footer">
         <div class="row">
           <div class="col-md-6 text-start">
-            <h5>{{ post.created_at }}</h5>
+            <h5>{{ dateTime(post.created_at) }}</h5>
           </div>
           <div class="col-md-6 text-end">
             <div class="dropdown">
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
@@ -71,8 +72,20 @@ export default {
           console.log(error);
         });
     },
+    dateTime(value) {
+      let today = moment().startOf("day")
+      let yesterday = moment().subtract(1, "days").startOf("day")
+
+      if (moment(value).isSame(today, "d")) {
+        return moment(value).format("[Hoy,] h:mm a")
+      } else if (moment(value).isSame(yesterday, "d")) {
+        return moment(value).format("[Ayer,] h:mm a")
+      } else {
+        return moment(value).format("D/MMMM/YYYY, h:mm a")
+      }
+
+      //return moment().startOf(value).fromNow();
+    },
   },
 };
-
-
 </script>

@@ -1,10 +1,11 @@
 <template>
   <nav>
-    <router-link :to="{name: 'newsView'}">Ver Noticias</router-link> |
-    <router-link :to="{name: 'createPost'}">Crear Noticia</router-link> |
-    <router-link :to="{name: 'modifyPost'}">Modificar Noticias</router-link>
+    <router-link :to="{ name: 'newsView' }">Ver Noticias</router-link> |
+    <router-link :to="{ name: 'createPost' }">Crear Noticia</router-link>
   </nav>
-  <router-view/>
+  <div class="row float-left">
+    <router-view />
+  </div>
 </template>
 
 <style>
