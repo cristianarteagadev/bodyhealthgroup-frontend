@@ -4,29 +4,78 @@
 
     <form>
       <div class="mb-3">
-        <label class="form-label">Categoría: <small class="text-danger">(* requerido)</small></label>
+        <label class="form-label"
+          >Categoría: <small class="text-danger">(* requerido)</small></label
+        >
         <select class="form-select" id="category_id">
           <option selected>Seleccionar</option>
-          <option v-for="category in categories" :key="category.id" :value="category.id">{{ category.name }}</option>
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
         </select>
-        <div v-if="errors.category_id" class="text-danger"><small>{{ errors.category_id }}</small></div>
+        <div v-if="errors.category_id" class="text-danger">
+          <small>{{ errors.category_id }}</small>
+        </div>
       </div>
       <div class="mb-3">
         <label class="form-label">Región:</label>
         <select class="form-select" id="region_id">
           <option selected>Seleccionar</option>
-          <option v-for="region in regions" :key="region.id" :value="region.id">{{ region.name }}</option>
+          <option v-for="region in regions" :key="region.id" :value="region.id">
+            {{ region.name }}
+          </option>
         </select>
       </div>
       <div class="mb-3">
-          <label class="form-label">Contenido de la Noticia: <small class="text-danger">(* requerido)</small> </label>
-          <textarea class="form-control" v-model="message" v-on:input="check" id="content"></textarea>
-          <input class="input" type="hidden" v-model="limit" v-on:input="check">
-          <small :class="{help: true, 'is-danger': remaining==0}">{{instruction}}</small>
-          <div v-if="errors.content" class="text-danger"><small>{{ errors.content }}</small></div>  
+        <label class="form-label"
+          >Contenido de la Noticia:
+          <small class="text-danger">(* requerido)</small>
+        </label>
+        <textarea
+          class="form-control"
+          v-model="message"
+          v-on:input="check"
+          id="content"
+        ></textarea>
+        <input class="input" type="hidden" v-model="limit" v-on:input="check" />
+        <small :class="{ help: true, 'is-danger': remaining == 0 }">{{
+          instruction
+        }}</small>
+        <div v-if="errors.content" class="text-danger">
+          <small>{{ errors.content }}</small>
+        </div>
       </div>
 
-      <button @click="submitForm" class="btn btn-primary">Guardar Noticia</button>
+      <div>
+        <h5>
+          Links Externos:
+          <button @click="addReference" class="btn btn-success btn-sm">
+            [+] Agregar Referencia
+          </button>
+        </h5>
+        
+        <div v-for="(reference, index) in references" :key="index" class="btn-group mb-3">
+          <input
+            v-model="reference.name"
+            type="text"
+            placeholder="Nombre Sitio Web" class="form-control"
+          />
+          <input
+            v-model="reference.url"
+            type="text"
+            placeholder="Dirección de Enlace" class="form-control"
+          />
+          <button @click="removeReference(index)" class="btn btn-danger"> Eliminar</button>
+        </div>
+      </div>
+      <hr />
+      <button @click="submitForm" class="btn btn-primary">
+        Guardar Noticia
+      </button>
     </form>
   </div>
 </template>
@@ -39,12 +88,14 @@ export default {
       categories: [],
       regions: [],
       //limitar caracteres
-      limit: 255,//textarea
-      message: "",//textarea
+      limit: 255, //textarea
+      message: "", //textarea
       //validar formulario
-      category_id: '',
-      content: '',
-      errors: {}
+      category_id: "",
+      content: "",
+      errors: {},
+      //Referencias
+      references: [],
     };
   },
   created() {
@@ -93,18 +144,26 @@ export default {
       this.errors = {};
 
       if (!this.category_id) {
-        this.errors.category_id = 'Error: Categoría es obligatoria.';
+        this.errors.category_id = "Error: Categoría es obligatoria.";
       }
 
       if (!this.content) {
-        this.errors.content = 'Error: Contenido de la Noticia es obligatoria.';
+        this.errors.content = "Error: Contenido de la Noticia es obligatoria.";
       }
 
       if (Object.keys(this.errors).length === 0) {
         // acciones posteriores del formulario
-        console.log('Formulario enviado');
+        console.log("Formulario enviado");
       }
-    }
+    },
+    //Referencias de Links Externos
+    addReference(e) {
+      e.preventDefault();
+      this.references.push({ name: "", url: "" });
+    },
+    removeReference(index) {
+      this.references.splice(index, 1);
+    },
   },
   computed: {
     instruction: function () {
