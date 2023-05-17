@@ -49,7 +49,7 @@
           <small>{{ errors.content }}</small>
         </div>
       </div>
-
+      <hr />
       <div>
         <h5>
           Links Externos:
@@ -81,6 +81,27 @@
         </div>
       </div>
       <hr />
+      <div>
+        <h5>
+          Tags:
+          <button @click="addTag" class="btn btn-success btn-sm">
+            [+] Agregar Tag
+          </button>
+        </h5>
+
+        <div v-for="(tag, index) in tags" :key="index" class="btn-group mb-3">
+          <input
+            v-model="tag.name"
+            type="text"
+            placeholder="Ingrese un Tag"
+            class="form-control"
+          />
+          <button @click="removeTag(index)" class="btn btn-danger">
+            Eliminar
+          </button>
+        </div>
+      </div>
+      <hr />
       <button @click="submitForm" class="btn btn-primary">
         Guardar Noticia
       </button>
@@ -103,6 +124,7 @@ export default {
       errors: {},
       //Referencias
       references: [],
+      tags: [],
     };
   },
   created() {
@@ -149,12 +171,12 @@ export default {
     submitForm(e) {
       e.preventDefault();
       this.errors = {};
-      
-      if (this.category_id === '') {
+
+      if (this.category_id === "") {
         this.errors.category_id = "Error: Categoría es obligatoria.";
       }
 
-      if (this.message === '') {
+      if (this.message === "") {
         this.errors.content = "Error: Contenido de la Noticia es obligatoria.";
       }
 
@@ -166,6 +188,7 @@ export default {
           region_id: this.region_id,
           content: this.message,
           links: this.references,
+          tags: this.tags,
         };
 
         // Enviar POST request a la API
@@ -187,6 +210,14 @@ export default {
     },
     removeReference(index) {
       this.references.splice(index, 1);
+    },
+    //Referencias de Links Externos
+    addTag(e) {
+      e.preventDefault();
+      this.tags.push({ name: ""});
+    },
+    removeTag(index) {
+      this.tags.splice(index, 1);
     },
   },
   computed: {
